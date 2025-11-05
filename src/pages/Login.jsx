@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
 import { showMessage } from '../utils/notifications';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 function Login() {
     const navigate = useNavigate();
+    const { login, users, loggedInUser } = useAppContext();
     const [formData, setFormData] = useState({
         loginIdentifier: '',
         loginPassword: ''
     });
     const [message, setMessage] = useState({ text: '', type: '' });
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (loggedInUser) {
+            navigate(loggedInUser.isAdmin ? '/admin' : '/dashboard');
+        }
+    }, [loggedInUser, navigate]);
 
     const handleChange = (e) => {
         setFormData({
@@ -18,34 +29,21 @@ function Login() {
     };
 
     const fillUserDemo = () => {
-        const demoUser = {
-            username: 'Demo User',
-            email: 'demo@internhub.com',
-            phone: '+91 9999999999',
-            college: 'Demo University',
-            branch: 'Computer Science',
-            isAdmin: false
-        };
-        localStorage.setItem('loggedInUser', JSON.stringify(demoUser));
-        showMessage('Logged in as Demo User!', 'success');
-        setTimeout(() => navigate('/dashboard'), 1000);
+        const demoUser = users.find(u => u.email === 'demo@internhub.com');
+        if (demoUser) {
+            login(demoUser);
+            showMessage('Logged in as Demo User!', 'success');
+            setTimeout(() => navigate('/dashboard'), 1000);
+        }
     };
 
     const fillAdminDemo = () => {
-        const adminUser = {
-            username: 'Suhani Parashar',
-            email: '2400033073@kluniversity.in',
-            phone: '+91 9876543210',
-            rollId: '2400033073',
-            year: '2nd Year',
-            college: 'KL University',
-            branch: 'B.Tech CSE-3',
-            semester: '3rd Semester',
-            isAdmin: true
-        };
-        localStorage.setItem('loggedInUser', JSON.stringify(adminUser));
-        showMessage('Logged in as Suhani Parashar (Admin)!', 'success');
-        setTimeout(() => navigate('/admin'), 1000);
+        const adminUser = users.find(u => u.email === '2400033073@kluniversity.in');
+        if (adminUser) {
+            login(adminUser);
+            showMessage('Logged in as Suhani Parashar (Admin)!', 'success');
+            setTimeout(() => navigate('/admin'), 1000);
+        }
     };
 
     const loginUser = (e) => {
@@ -65,31 +63,19 @@ function Login() {
                 email: 'admin@internhub.com',
                 isAdmin: true
             };
-            localStorage.setItem('loggedInUser', JSON.stringify(adminUser));
+            login(adminUser);
             setMessage({ text: 'Admin login successful! Redirecting...', type: 'success' });
             setTimeout(() => navigate('/admin'), 1000);
             return;
         }
         
         // Check regular users
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
         const user = users.find(u => 
             (u.username === loginIdentifier || u.email === loginIdentifier) && u.password === loginPassword
         );
         
         if (user) {
-            const loggedInUser = {
-                username: user.username,
-                email: user.email,
-                phone: user.phone || '',
-                rollId: user.rollId || '',
-                year: user.year || '',
-                college: user.college || '',
-                branch: user.branch || '',
-                semester: user.semester || '',
-                isAdmin: user.isAdmin || false
-            };
-            localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+            login(user);
             setMessage({ text: 'Login successful! Redirecting...', type: 'success' });
             setTimeout(() => navigate(user.isAdmin ? '/admin' : '/dashboard'), 1000);
         } else {
@@ -99,16 +85,7 @@ function Login() {
 
     return (
         <div className="auth-page">
-            <nav className="navbar">
-                <div className="container">
-                    <div className="nav-brand">
-                        <h2>🎓 InternHub</h2>
-                    </div>
-                    <ul className="nav-links">
-                        <li><Link to="/">Home</Link></li>
-                    </ul>
-                </div>
-            </nav>
+            <Navbar />
 
             <section className="auth-section">
                 <div className="auth-container">

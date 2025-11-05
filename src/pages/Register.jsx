@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 function Register() {
     const navigate = useNavigate();
+    const { register, users, loggedInUser } = useAppContext();
     const [formData, setFormData] = useState({
         regUsername: '',
         regEmail: '',
@@ -12,6 +16,13 @@ function Register() {
         regConfirmPassword: ''
     });
     const [message, setMessage] = useState({ text: '', type: '' });
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (loggedInUser) {
+            navigate(loggedInUser.isAdmin ? '/admin' : '/dashboard');
+        }
+    }, [loggedInUser, navigate]);
 
     const handleChange = (e) => {
         setFormData({
@@ -57,9 +68,6 @@ function Register() {
             return;
         }
         
-        // Get existing users
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        
         // Check if user already exists
         if (users.find(u => u.email === email)) {
             setMessage({ text: 'An account with this email already exists', type: 'error' });
@@ -82,8 +90,7 @@ function Register() {
             createdAt: new Date().toISOString()
         };
         
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
+        register(newUser);
         
         setMessage({ text: 'Account created successfully! Redirecting to login...', type: 'success' });
         
@@ -94,17 +101,7 @@ function Register() {
 
     return (
         <div className="auth-page">
-            <nav className="navbar">
-                <div className="container">
-                    <div className="nav-brand">
-                        <h2>🎓 InternHub</h2>
-                    </div>
-                    <ul className="nav-links">
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/login">Login</Link></li>
-                    </ul>
-                </div>
-            </nav>
+            <Navbar />
 
             <section className="auth-section">
                 <div className="auth-container">

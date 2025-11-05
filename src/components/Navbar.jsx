@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { checkLoginStatus } from '../utils/auth';
+import { useAppContext } from '../context/AppContext';
 import { showConfirmModal, showMessage } from '../utils/notifications';
 
 function Navbar() {
     const location = useLocation();
-    const user = checkLoginStatus();
+    const { loggedInUser, logout, darkMode, toggleDarkMode } = useAppContext();
     const currentPath = location.pathname;
     const navigate = useNavigate();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const logoutUser = () => {
         showConfirmModal('Are you sure you want to logout?', () => {
-            localStorage.removeItem('loggedInUser');
+            logout();
             showMessage('Logged out successfully', 'success');
             // use client-side navigation to avoid server 404 on static hosts (Vercel)
             setTimeout(() => navigate('/login'), 1000);
@@ -34,8 +34,17 @@ function Navbar() {
                 <div className="nav-brand">
                     <h2>🎓 InternHub</h2>
                 </div>
+                {/* Dark Mode Toggle */}
+                <button 
+                    className="dark-mode-toggle" 
+                    onClick={toggleDarkMode}
+                    aria-label="Toggle dark mode"
+                    title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                >
+                    {darkMode ? '☀️' : '🌙'}
+                </button>
                 {/* Hamburger menu button for mobile */}
-                {user && (
+                {loggedInUser && (
                     <button 
                         className="mobile-menu-toggle" 
                         onClick={toggleMobileMenu}
@@ -48,13 +57,13 @@ function Navbar() {
                         </span>
                     </button>
                 )}
-                <ul className={`nav-links ${user && mobileMenuOpen ? 'mobile-open' : ''}`} id="navLinks">
-                    {!user ? (
+                <ul className={`nav-links ${loggedInUser && mobileMenuOpen ? 'mobile-open' : ''}`} id="navLinks">
+                    {!loggedInUser ? (
                         <>
                             <li><Link to="/" className={currentPath === '/' ? 'active' : ''}>Home</Link></li>
                             <li><Link to="/login" className="btn-login">Login</Link></li>
                         </>
-                    ) : user.isAdmin ? (
+                    ) : loggedInUser.isAdmin ? (
                         <>
                             <li><Link to="/admin" onClick={closeMobileMenu} className={currentPath === '/admin' ? 'active' : ''}>Admin Dashboard</Link></li>
                             <li><Link to="/" onClick={closeMobileMenu}>Home</Link></li>

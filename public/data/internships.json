@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "title": "Frontend Developer Intern",
+    "company": "TechCorp Solutions",
+    "duration": "3 Months",
+    "location": "Remote",
+    "stipend": "₹15,000/month",
+    "description": "Work on modern web applications using React, Vue, or Angular. Learn from experienced developers.",
+    "skills": ["HTML", "CSS", "JavaScript", "React"],
+    "type": "Full-time"
+  },
+  {
+    "id": 2,
+    "title": "Data Science Intern",
+    "company": "DataMinds Analytics",
+    "duration": "6 Months",
+    "location": "Bangalore",
+    "stipend": "₹20,000/month",
+    "description": "Work with Python, machine learning models, and data visualization tools.",
+    "skills": ["Python", "Pandas", "Machine Learning", "SQL"],
+    "type": "Full-time"
+  },
+  {
+    "id": 3,
+    "title": "UI/UX Design Intern",
+    "company": "Creative Studio",
+    "duration": "2 Months",
+    "location": "Mumbai",
+    "stipend": "₹12,000/month",
+    "description": "Design user interfaces and create prototypes using Figma and Adobe XD.",
+    "skills": ["Figma", "Adobe XD", "Prototyping", "User Research"],
+    "type": "Part-time"
+  },
+  {
+    "id": 4,
+    "title": "Backend Developer Intern",
+    "company": "CloudTech Systems",
+    "duration": "4 Months",
+    "location": "Hyderabad",
+    "stipend": "₹18,000/month",
+    "description": "Build scalable APIs and work with databases, microservices, and cloud platforms.",
+    "skills": ["Node.js", "MongoDB", "REST API", "Docker"],
+    "type": "Full-time"
+  },
+  {
+    "id": 5,
+    "title": "Mobile App Development Intern",
+    "company": "AppInnovate Labs",
+    "duration": "3 Months",
+    "location": "Pune",
+    "stipend": "₹16,000/month",
+    "description": "Develop cross-platform mobile applications using React Native or Flutter.",
+    "skills": ["React Native", "Flutter", "Firebase", "Mobile UI"],
+    "type": "Full-time"
+  },
+  {
+    "id": 6,
+    "title": "Digital Marketing Intern",
+    "company": "Growth Marketing Co",
+    "duration": "2 Months",
+    "location": "Remote",
+    "stipend": "₹10,000/month",
+    "description": "Learn SEO, social media marketing, content creation, and analytics.",
+    "skills": ["SEO", "Social Media", "Content Writing", "Google Analytics"],
+    "type": "Part-time"
+  }
+]

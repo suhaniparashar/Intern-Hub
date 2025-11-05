@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { initializeDemoData } from './utils/auth';
+import { AppContextProvider } from './context/AppContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -13,25 +14,62 @@ import Admin from './pages/Admin';
 import './App.css';
 
 function App() {
-  useEffect(() => {
-    // Initialize demo data on first load
-    initializeDemoData();
-  }, []);
-
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/internships' element={<Internships />} />
-        <Route path='/enrolled' element={<Enrolled />} />
-        <Route path='/status' element={<Status />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/admin' element={<Admin />} />
-      </Routes>
-    </Router>
+    <AppContextProvider>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path='/' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/about' element={<About />} />
+          
+          {/* Protected Routes - Students */}
+          <Route 
+            path='/dashboard' 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path='/internships' 
+            element={
+              <ProtectedRoute>
+                <Internships />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path='/enrolled' 
+            element={
+              <ProtectedRoute>
+                <Enrolled />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path='/status' 
+            element={
+              <ProtectedRoute>
+                <Status />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Protected Routes - Admin Only */}
+          <Route 
+            path='/admin' 
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <Admin />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </Router>
+    </AppContextProvider>
   );
 }
 
