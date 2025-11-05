@@ -2,7 +2,7 @@
 
 **Student Name:** Suhani Prashar  
 **Project:** InternHub - Internship Management Platform  
-**Repository:** https://github.com/amanagarwal0602/internship-hub  
+**Repository:** https://github.com/suhaniparashar/internship-hub  
 
 
 
