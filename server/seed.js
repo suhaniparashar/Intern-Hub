@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import User from './models/User.js';
 import Internship from './models/Internship.js';
+import Application from './models/Application.js';
 
 dotenv.config();
 
@@ -72,6 +73,7 @@ async function seedDatabase() {
     // Clear existing data
     await User.deleteMany({});
     await Internship.deleteMany({});
+    await Application.deleteMany({});
     console.log('🗑️  Cleared existing data');
 
     // Create admin user
@@ -97,8 +99,40 @@ async function seedDatabase() {
     console.log('✅ Created demo student');
 
     // Insert internships
-    await Internship.insertMany(internshipsData);
+    const internships = await Internship.insertMany(internshipsData);
     console.log('✅ Inserted internships data');
+
+    // Create sample applications with random data
+    const statuses = ['Pending', 'Under Review', 'Accepted', 'Rejected'];
+    const feedbackMessages = [
+      'Great portfolio! We are impressed with your work.',
+      'Your application is being reviewed by our team.',
+      'Thank you for applying. We will get back to you soon.',
+      'Unfortunately, we cannot proceed with your application at this time.',
+      'Excellent technical skills demonstrated.',
+      'We would like to schedule an interview with you.',
+      'Your profile matches our requirements perfectly.',
+      'Please provide more details about your experience.'
+    ];
+
+    const applications = [];
+    
+    // Create 15 random applications
+    for (let i = 0; i < 15; i++) {
+      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+      const randomFeedback = randomStatus === 'Pending' ? '' : feedbackMessages[Math.floor(Math.random() * feedbackMessages.length)];
+      
+      applications.push({
+        userId: student._id,
+        internshipId: internships[Math.floor(Math.random() * internships.length)]._id,
+        status: randomStatus,
+        appliedDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000), // Random date within last 30 days
+        adminFeedback: randomFeedback
+      });
+    }
+
+    await Application.insertMany(applications);
+    console.log('✅ Inserted 15 random applications');
 
     console.log('\n🎉 Database seeded successfully!');
     console.log('\nLogin credentials:');

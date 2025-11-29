@@ -67,7 +67,9 @@ function Register() {
             username,
             email,
             fullName: username, // MongoDB User model requires fullName
-            password: regPassword
+            password: regPassword,
+            college,
+            branch
         };
         
         const result = await register(newUser);

@@ -154,10 +154,12 @@ export const AppContextProvider = ({ children }) => {
   const register = async (newUser) => {
     try {
       const userData = await api.users.register(newUser);
+      console.log('Registration successful:', userData);
       return { success: true, user: userData };
     } catch (error) {
       console.error('Registration error:', error);
-      return { success: false, error: error.message };
+      const errorMessage = error.message || 'Registration failed. Please try again.';
+      return { success: false, error: errorMessage };
     }
   };
 
